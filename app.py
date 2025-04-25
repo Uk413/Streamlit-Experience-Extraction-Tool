@@ -3,7 +3,7 @@ import requests
 from typing import Dict
 
 def analyze_resume(file, job_role: str) -> Dict:
-    url = "http://localhost:8000/analyze-resume"
+    url = "https://utkarsh134-fastapi-experience-extractor.hf.space/analyze-resume"
     
     content_type = file.type
     
