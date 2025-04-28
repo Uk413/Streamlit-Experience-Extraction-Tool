@@ -60,19 +60,24 @@ def main():
             if result:
                 st.success("Analysis completed!")
                 
+                st.header("Basic Information")
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.write("**Candidate Name:**", result["candidate_name"])
+                    st.write("**Current/Recent Role:**", result.get("role") or "Not specified")
+                with col2:
+                    st.write("**University:**", result.get("university_name") or "Not specified")
+                    st.write("**Location:**", result.get("location") or "Not specified")
+                if result.get("physical_address"):
+                    st.write("**Address:**", result["physical_address"])
+
                 st.header(f"Relevant Experience for {job_role}")
-                if result["relevant_experiences"]:
-                    for exp in result["relevant_experiences"]:
-                        st.subheader(f"{exp['position']} at {exp['company']}")
-                        st.write(f"**Duration:** {exp['duration']}")
-                        if 'relevant_experience' in exp:
-                            st.write("**Relevant Experience:**")
-                            st.write(exp['relevant_experience'])
-                        st.divider()
+                if result["relevant_experiences"] and result["relevant_experiences"] != "No relevant experience found":
+                    st.write(result["relevant_experiences"])
                 else:
                     st.info("No directly relevant experiences found for the specified job role.")
                 
-                st.header("Overall Experience Summary")
+                st.header("Experience Analysis")
                 st.write(result["experience_summary"])
 
 if __name__ == "__main__":
