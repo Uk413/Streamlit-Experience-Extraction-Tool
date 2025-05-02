@@ -1,14 +1,18 @@
 import streamlit as st
 import requests
 from typing import Dict
+import urllib.parse
 
 def analyze_resume(file, job_role: str) -> Dict:
     url = "https://utkarsh134-fastapiexperience2.hf.space/analyze-resume"
     
     content_type = file.type
     
+    
+    encoded_filename = urllib.parse.quote(file.name)
+    
     files = {
-        'resume_file': (file.name, file.getvalue(), content_type),
+        'resume_file': (encoded_filename, file.getvalue(), content_type),
         'job_role': (None, job_role)
     }
     
@@ -88,7 +92,7 @@ def main():
                 with col1:
                     st.write("**Highest Education:**", result.get("highest_education") or "Not specified")
                     st.write("**Current Designation:**", result.get("designation") or "Not specified")
-                    # Handle total_experience as both string and float
+                   
                     total_exp = result.get('total_experience')
                     if total_exp is not None:
                         if isinstance(total_exp, (int, float)):
