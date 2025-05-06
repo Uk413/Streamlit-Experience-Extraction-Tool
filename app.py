@@ -2,21 +2,46 @@ import streamlit as st
 import requests
 from typing import Dict
 import urllib.parse
+import json
+import logging
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 def analyze_resume(file, job_role: str) -> Dict:
-    url = "https://utkarsh134-fastapiexperience2.hf.space/analyze-resume"
+    url = "https://utkarsh134-fastapiexperience2.hf.space//analyze-resume"
     content_type = file.type
     encoded_filename = urllib.parse.quote(file.name)
+    
     files = {
         'resume_file': (encoded_filename, file.getvalue(), content_type),
         'job_role': (None, job_role)
     }
     
+    # Log request details
+    logger.debug("Request Details:")
+    logger.debug(json.dumps({
+        "url": url,
+        "filename": encoded_filename,
+        "content_type": content_type,
+        "job_role": job_role
+    }, indent=2))
+    
     try:
         response = requests.post(url, files=files)
-        response.raise_for_status()  
-        return response.json()
+        response.raise_for_status()
+        response_json = response.json()
+        
+        logger.debug("Response Details:")
+        logger.debug(f"Status Code: {response.status_code}")
+        logger.debug(json.dumps(response_json, indent=2))
+        
+        return response_json
     except requests.exceptions.RequestException as e:
+        logger.error(f"Error communicating with backend: {str(e)}")
         st.error(f"Error communicating with backend: {str(e)}")
         return None
 
