@@ -12,7 +12,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 def analyze_resume(file, job_role: str) -> Dict:
-    url = "https://utkarsh134-fastapiexperience2.hf.space//analyze-resume"
+    url = "https://utkarsh134-fastapiexperience2.hf.space/analyze-resume"
     content_type = file.type
     encoded_filename = urllib.parse.quote(file.name)
     
