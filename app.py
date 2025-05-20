@@ -5,6 +5,7 @@ import urllib.parse
 import json
 import logging
 
+# Configure logging
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s - %(levelname)s - %(message)s'
@@ -12,7 +13,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 def analyze_resume(file, job_role: str) -> Dict:
-    url = "https://utkarsh134-fastapiexperience2.hf.space/analyze-resume"
+    url = "https://utkarsh134-fastapiexperience2.hf.space//analyze-resume"
+    # url = "http://localhost:8000/analyze-resume"
     content_type = file.type
     encoded_filename = urllib.parse.quote(file.name)
     
@@ -35,6 +37,7 @@ def analyze_resume(file, job_role: str) -> Dict:
         response.raise_for_status()
         response_json = response.json()
         
+        # Log response details
         logger.debug("Response Details:")
         logger.debug(f"Status Code: {response.status_code}")
         logger.debug(json.dumps(response_json, indent=2))
@@ -100,8 +103,25 @@ def main():
                             st.write(result["relevant_experience"])
                         else:
                             st.info("No directly relevant experience found for the specified job role.")
-                        
+
                         st.divider()
+
+                        # Show Skills
+                        st.subheader("Candidate Skills")
+                        skills = result.get("skills")
+                        if skills:
+                            st.write(skills)
+                        else:
+                            st.info("No skills listed.")
+
+                        # Show Skill Scores
+                        st.subheader("Skill Scores")
+                        skill_scores = result.get("skill_score", [])
+                        if skill_scores:
+                            st.table([{ "Skill": s["skill_name"], "Score": s["skill_score"] } for s in skill_scores])
+                        else:
+                            st.info("No skill scores available.")
+
 
 if __name__ == "__main__":
     main()
